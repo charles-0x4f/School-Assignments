@@ -3,7 +3,8 @@
 // Week 11 - 20.4
 
 import java.util.Scanner;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /*
 A thread class that will open a file and determine
@@ -25,6 +26,9 @@ public class CountRunnable implements Runnable
 		wordCount = 0;
 	}
 
+	/*
+	Implementation of run for each thread
+	*/
 	public void run()
 	{
 		try
