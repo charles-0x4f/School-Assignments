@@ -1,82 +1,43 @@
-// Charles 0x4f
-// CSC.REDACTED
-// Week 12 - 21.8
+// Charles.0x4f
+// July 10 2012
 
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.InputStream;
-import java.util.Scanner;
-import java.io.OutputStream;
-import java.io.File;
 
 /*
-A class that represents a very basic web server; listens for connection,
-looks for GET commands, and returns an html file based on client parameters
+	Class that manages client connections and the threads that
+	communicate with them
 */
 public class WebServer
 {
 	public static void main(String[] args)
 	{
-		try
-		{
-			final int port = 8080;
+		// Set to 0 to continue until termination
+		final int MAX_CONNECTIONS = 50;
+		final int port = 8080;
+
+		int connections = 0;
+
+		try {
 			ServerSocket server = new ServerSocket(port);
-			System.out.println("Waiting...");
 
-			while(true)
-			{
-				Socket s = server.accept();
-				System.out.println("Connected");
+			do {
+				System.out.println("Waiting...");
 
-				Scanner in = new Scanner(s.getInputStream());
-				PrintWriter out = new PrintWriter(s.getOutputStream());
+				Socket sock = server.accept();
 
-				// If the server has received data, send the header
-				if(in.hasNextLine())
-				{
-					System.out.print("Reveived something; ");
-					System.out.println("Sending header");
+				ClientHandler handler = new ClientHandler(sock);
 
-					out.println("HTTP/1.1 200 OK");
-					out.flush();
-				}
+				Thread client = new Thread(handler);
+				client.start();
 
-				in.useDelimiter(" ");
-				String command = in.next();
-				
-				// Check to see if web client command is GET
-				if(command.equals("GET"))
-				{
-					// If get command, try to open file from
-					// next parameter
-					try {
-						Scanner file = new Scanner(new File(in.next()));
-						
-						while(file.hasNextLine())
-						{
-							out.println(file.nextLine());
-						}
-
-						out.flush();
-					}
-					catch(FileNotFoundException ex) {
-						// File not found
-						System.out.println("404 Not Found");
-						out.println("404 Not Found");
-						out.flush();
-					}
-				}
-
-				out.flush();
-				s.close();
-				break;
-			}
+				++connections;
+			} while(connections < MAX_CONNECTIONS || MAX_CONNECTIONS == 0);
 		}
-		catch(IOException ex)
-		{
+		catch(IOException ex) {
+			System.out.println("IO Exception in main:\n");
 			ex.printStackTrace();
 		}
 	}
