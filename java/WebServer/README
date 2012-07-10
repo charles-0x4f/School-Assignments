@@ -1,3 +1,5 @@
-A very simple web server that listens for a connection and sends the requested URL-specified file if it receives a GET command
+A VERY SIMPLE multithreaded HTML server, will listen for GET commands from a
+client and attempt to send a requested file.
 
-Note: This was shoved into one file, this should be put into its own class to stay with Java conventions, will clean when time permits
+NOTE: THIS WILL SEND ANY FILE REQUESTED THAT THE PROGRAM HAS READ ACCESS TO
+	USE CAUTION
