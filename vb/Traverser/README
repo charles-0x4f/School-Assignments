@@ -1,0 +1,4 @@
+This is an A* traversal and graphing application written in Visual Basic/.NET.
+
+
+It can save and load the graphs to a MySQL database programmatically (as required by the assignment).
